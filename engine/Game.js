@@ -57,7 +57,7 @@ export default class Game {
     this.remainingImage.src = "assets/backgrounds/falta.png";
 
     this.startImage = new Image();
-    this.startImage.src = "assets/backgrounds/portada.png";
+    this.startImage.src = "assets/backgrounds/inicio.png";
 
     this.backgroundMusic = new Audio("sounds/musica.mp3");
     this.backgroundMusic.loop = true;
