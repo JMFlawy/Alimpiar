@@ -3,7 +3,7 @@ import Trash from "../entities/Trash.js";
 import Container from "../entities/Container.js";
 
 export default class Game {
-  // Barajar un array (Fisherâ€“Yates) [web:331]
+  // Barajar un array (Fisher–Yates) [web:331]
   shuffleArray(arr) {
     const shuffled = arr.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -507,7 +507,7 @@ export default class Game {
               setTimeout(() => {
                 this.finishSound.currentTime = 0;
                 this.finishSound.play().catch(() => {});
-              }, 2500); // aquÃ­ puedes ajustar el retraso del sonido "terminado"
+              }, 2500); // aquí puedes ajustar el retraso del sonido "terminado"
             }
           } else {
             this.playRandomSound(this.failSounds);
@@ -587,7 +587,7 @@ export default class Game {
         this.ctx.fillStyle = "#ffffff";
         this.ctx.font = "32px Arial";
         this.ctx.textAlign = "center";
-        this.ctx.fillText("Pulsa una tecla o botÃ³n para empezar", this.width / 2, this.height / 2);
+        this.ctx.fillText("Pulsa una tecla o botón para empezar", this.width / 2, this.height / 2);
       }
       return;
     }
@@ -675,7 +675,7 @@ export default class Game {
         this.ctx.font = "42px Arial";
         this.ctx.textAlign = "left";
         this.ctx.fillStyle = "#000";
-        this.ctx.fillText("Â¡COMPLETADO!", 250, 220);
+        this.ctx.fillText("¡COMPLETADO!", 250, 220);
       }
     }
   }
