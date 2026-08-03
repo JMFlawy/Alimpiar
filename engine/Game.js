@@ -322,17 +322,7 @@ bindTouchButton("btnAction", "Control");
   }
 
   startGameFromTitle() {
-      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
-  if (
-    isMobile &&
-    document.fullscreenEnabled &&
-    !document.fullscreenElement
-  ) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  }
-
-  this.showStartScreen = false;
+     
 
   // resto del código...
 
