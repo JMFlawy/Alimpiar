@@ -87,14 +87,17 @@ export default class Player {
 
     // Colisión con plataformas (solo por arriba)
     for (const p of platforms) {
-      const margen = 10;
-      if (
-        this.x < p.x + p.width &&
-        this.x + this.width > p.x &&
-        this.y + this.height > p.y &&
-        this.y + this.height < p.y + p.height &&
-        this.vy >= 0
-      ) {
+      
+const pieIzquierdo = this.x + 14;
+const pieDerecho = this.x + this.width - 14;
+
+if (
+  pieIzquierdo < p.x + p.width &&
+  pieDerecho > p.x &&
+  this.y + this.height > p.y &&
+  this.y + this.height < p.y + p.height &&
+  this.vy >= 0
+) {
         this.y = p.y - this.height;
         this.vy = 0;
         this.onGround = true;
