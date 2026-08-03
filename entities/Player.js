@@ -8,7 +8,7 @@ export default class Player {
     this.width = 72;
     this.height = 108;
 const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    this.speed = isMobile ? 3.0 : 1.8;
+    this.speed = isMobile ? 3.4 : 1.8;
 
     this.vx = 0;
     this.vy = 0;
