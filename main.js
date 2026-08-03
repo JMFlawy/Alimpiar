@@ -14,10 +14,6 @@ export const GAME_HEIGHT = 450;
 
 let game = null;
 
-// Imagen de portada
-const portada = new Image();
-portada.src = "assets/backgrounds/portada.png";
-
 // Ajuste a pantalla completa con HiDPI
 function resizeCanvas() {
   const dpr = window.devicePixelRatio || 1;
@@ -46,16 +42,12 @@ function resizeCanvas() {
   ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
 }
 
-// Dibuja la portada PNG en lugar de la pantalla negra y el texto
-function drawPortada() {
-  ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-  ctx.drawImage(portada, 0, 0, GAME_WIDTH, GAME_HEIGHT);
-}
-
 // Inicialización
 function init() {
   resizeCanvas();
-  drawPortada();
+
+  game = new Game(canvas, ctx, GAME_WIDTH, GAME_HEIGHT);
+  game.start();
 
   // Intentamos arrancar la música tras la primera interacción del usuario
   const tryPlayMusic = () => {
@@ -75,20 +67,7 @@ function init() {
 // Redimensionar al cambiar tamaño de ventana
 window.addEventListener("resize", () => {
   resizeCanvas();
-  drawPortada();
 });
 
-// Cuando cargue la imagen, mostramos la portada
-portada.onload = () => {
-  init();
-};
-
 // Arrancar juego
-// OJO: si quieres que el juego empiece al pulsar un botón/enlace,
-// esta línea debe cambiarse, pero la dejo tal como estaba en tu flujo.
-window.addEventListener("click", () => {
-  if (!game) {
-    game = new Game(canvas, ctx, GAME_WIDTH, GAME_HEIGHT);
-    game.start();
-  }
-}, { once: true });
+init();
