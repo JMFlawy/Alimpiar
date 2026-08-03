@@ -870,10 +870,7 @@ this.truckVideo.currentTime = 0;
       }
     }
 
-    if (this.truckSequenceStarted) {
-      const screenX = this.truckX - this.cameraX;
-      const screenY = this.truckY;
-
+   
      if (this.truckSequenceStarted) {
 const screenX = this.truckX - this.cameraX;
 const screenY = this.truckY;
