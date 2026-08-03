@@ -866,19 +866,38 @@ this.basuratSound.currentTime = 0;
       const screenX = this.truckX - this.cameraX;
       const screenY = this.truckY;
 
-      let img = this.truckBaseImage;
-      if (this.truckX <= this.truckTargetX && this.truckFrames[this.truckAnimIndex]) {
-        img = this.truckFrames[this.truckAnimIndex];
-      }
+     if (this.truckSequenceStarted) {
+const screenX = this.truckX - this.cameraX;
+const screenY = this.truckY;
+const scale = 0.8;
 
-      if (img.complete && img.naturalWidth > 0) {
-        const scale = 0.8;
-        const w = img.naturalWidth * scale;
-        const h = img.naturalHeight * scale;
+// Mientras se reproduce el vídeo, se dibuja el vídeo en vez de sprites.
+if (this.truckVideoPlaying && this.truckVideo.readyState >= 2) {
+const videoW = this.truckVideo.videoWidth * scale;
+const videoH = this.truckVideo.videoHeight * scale;
 
-        this.ctx.drawImage(img, screenX, screenY - h + 25, w, h);
-      }
-    }
+this.ctx.drawImage(
+this.truckVideo,
+screenX,
+screenY - videoH + 25,
+videoW,
+videoH
+);
+} else {
+// Al llegar se muestra camion.png.
+// Al salir se muestra el último PNG de la antigua animación.
+const img = this.truckLeaving
+? this.truckFrames[this.truckFrames.length - 1]
+: this.truckBaseImage;
+
+if (img.complete && img.naturalWidth > 0) {
+const w = img.naturalWidth * scale;
+const h = img.naturalHeight * scale;
+
+this.ctx.drawImage(img, screenX, screenY - h + 25, w, h);
+}
+}
+}
 
     this.player.draw(this.ctx, this.cameraX, this.collectedItem);
 
