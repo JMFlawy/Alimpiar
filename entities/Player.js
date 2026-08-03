@@ -7,8 +7,8 @@ export default class Player {
     // Hitbox
     this.width = 72;
     this.height = 108;
-
-    this.speed = 2.2;
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    this.speed = isMobile ? 2.35 : 2.2;
 
     this.vx = 0;
     this.vy = 0;
