@@ -15,7 +15,7 @@ export default class Container {
       type === "amarillo" ? "amarillo.png" :
       type === "azul"     ? "azul.png"     :
       type === "verde"    ? "verde.png"    :
-      type === "marron"   ? "marrón.png"   :
+      type === "marron"   ? "marron.png"   :
                             "gris.png";
 
     this.image.src = `assets/contenedores/${filename}`;
