@@ -389,7 +389,10 @@ const speed = isMobile ? 0.88 : 0.8;
 
     if (!this.truckLeaving) {
       this.truckAnimCounter++;
-      if (this.truckAnimCounter >= 290) {
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+const animDelay = isMobile ? 270 : 290;
+
+if (this.truckAnimCounter >= animDelay) {
         this.truckAnimCounter = 0;
 
         if (this.truckAnimIndex === 0) {
