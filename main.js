@@ -69,6 +69,8 @@ function init() {
 
   window.addEventListener("click", tryPlayMusic);
   window.addEventListener("keydown", tryPlayMusic);
+  document.addEventListener("touchstart", tryPlayMusic, { once: true });
+document.addEventListener("pointerdown", tryPlayMusic, { once: true });
 }
 
 window.addEventListener("resize", resizeCanvas);
