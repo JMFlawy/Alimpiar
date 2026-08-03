@@ -1,4 +1,4 @@
-import Game from "./game.js";
+import Game from "./engine/Game.js";
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -35,10 +35,6 @@ function tryPlayMusic() {
   if (musicStarted) return;
   musicStarted = true;
   music.play().catch(() => {});
-  window.removeEventListener("pointerdown", tryPlayMusic);
-  window.removeEventListener("touchstart", tryPlayMusic);
-  window.removeEventListener("keydown", tryPlayMusic);
-  window.removeEventListener("click", tryPlayMusic);
 }
 
 function setKey(key, pressed) {
@@ -84,19 +80,16 @@ function setupTouchControls() {
 
 function init() {
   resizeCanvas();
-
   game = new Game(canvas, ctx, GAME_WIDTH, GAME_HEIGHT);
   game.start();
 
   window.addEventListener("pointerdown", tryPlayMusic, { passive: true });
   window.addEventListener("touchstart", tryPlayMusic, { passive: true });
   window.addEventListener("keydown", tryPlayMusic, { passive: true });
-  window.addEventListener("click", tryPlayMusic, { passive: true });
 
   setupTouchControls();
 }
 
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("orientationchange", resizeCanvas);
-
 init();
