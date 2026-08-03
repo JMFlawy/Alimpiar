@@ -368,7 +368,8 @@ bindTouchButton("btnAction", "Control");
   }
 
   updateTruckSequence() {
-    const speed = 0.8;
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+const speed = isMobile ? 0.88 : 0.8;
 
     if (!this.truckLeaving && this.truckX > this.truckTargetX) {
       this.truckX -= speed;
