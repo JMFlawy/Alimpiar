@@ -74,11 +74,11 @@ export default class Game {
     this.player = new Player(100, this.groundY - 92);
 
     this.platforms = [
-      { x: 260,  y: this.groundY - 90,  width: 180, height: 20 },
-      { x: 520,  y: this.groundY - 120, width: 170, height: 20 },
-      { x: 780,  y: this.groundY - 140, width: 170, height: 20 },
-      { x: 1040, y: this.groundY - 120, width: 180, height: 20 },
-      { x: 1340, y: this.groundY - 140, width: 180, height: 20 }
+      { x: 260,  y: this.groundY - 90,  width: 140, height: 20 },
+      { x: 520,  y: this.groundY - 120, width: 130, height: 20 },
+      { x: 780,  y: this.groundY - 140, width: 130, height: 20 },
+      { x: 1040, y: this.groundY - 120, width: 140, height: 20 },
+      { x: 1340, y: this.groundY - 140, width: 140, height: 20 }
     ];
 
     this.containers = [
