@@ -26,7 +26,7 @@ export default class Game {
     this.cameraX = 0;
 
    this.keys = {};
-    this.touchMusicStarted = false;
+   
     this.collectedItem = null;
     this.gameOver = false;
     this.sequenceFinished = false;
