@@ -335,7 +335,7 @@ bindTouchButton("btnAction", "Control");
   this.showStartScreen = false;
 
   // resto del código...
-}
+
     this.showStartScreen = false;
     this.fadeAlpha = 0;
     this.sequenceFinished = false;
