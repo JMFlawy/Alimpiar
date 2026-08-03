@@ -3,7 +3,6 @@ import Trash from "../entities/Trash.js";
 import Container from "../entities/Container.js";
 
 export default class Game {
-  // Barajar un array (Fisher–Yates) [web:331]
   shuffleArray(arr) {
     const shuffled = arr.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -73,42 +72,39 @@ export default class Game {
     this.player = new Player(100, this.groundY - 92);
 
     this.platforms = [
-      { x: 260,  y: this.groundY - 90,  width: 200, height: 20 },
-      { x: 520,  y: this.groundY - 120, width: 180, height: 20 },
-      { x: 780,  y: this.groundY - 140, width: 180, height: 20 },
+      { x: 260, y: this.groundY - 90, width: 200, height: 20 },
+      { x: 520, y: this.groundY - 120, width: 180, height: 20 },
+      { x: 780, y: this.groundY - 140, width: 180, height: 20 },
       { x: 1040, y: this.groundY - 120, width: 200, height: 20 },
       { x: 1340, y: this.groundY - 140, width: 200, height: 20 }
     ];
 
     this.containers = [
-      new Container(300,  this.groundY - 85, "amarillo"),
-      new Container(700,  this.groundY - 85, "azul"),
+      new Container(300, this.groundY - 85, "amarillo"),
+      new Container(700, this.groundY - 85, "azul"),
       new Container(1100, this.groundY - 85, "verde"),
       new Container(1500, this.groundY - 85, "marron"),
       new Container(1900, this.groundY - 85, "gris")
     ];
 
-    // Posiciones fijas de basura (se mantienen iguales cada partida)
     this.trashPositions = [
-      { x: 380,  y: this.groundY - 30 },
-      { x: 450,  y: this.groundY - 30 },
-      { x: 580,  y: this.groundY - 120 - 30 },
-      { x: 840,  y: this.groundY - 140 - 30 },
+      { x: 380, y: this.groundY - 30 },
+      { x: 450, y: this.groundY - 30 },
+      { x: 580, y: this.groundY - 120 - 30 },
+      { x: 840, y: this.groundY - 140 - 30 },
       { x: 1260, y: this.groundY - 120 - 30 },
       { x: 1660, y: this.groundY - 30 }
     ];
 
-    // Tipos posibles de basura (se barajan cada partida)
     this.trashDefinitions = [
-      { type: "paper",   color: "azul"     },
+      { type: "paper", color: "azul" },
       { type: "plastic", color: "amarillo" },
       { type: "plastic", color: "amarillo" },
-      { type: "glass",   color: "verde"    },
-      { type: "organic", color: "marron"   },
-      { type: "resto",   color: "restos"   }
+      { type: "glass", color: "verde" },
+      { type: "organic", color: "marron" },
+      { type: "resto", color: "restos" }
     ];
 
-    // Crear basura con posiciones fijas y tipos aleatorios
     this.trashItems = [];
     const shuffledDefsInit = this.shuffleArray(this.trashDefinitions);
     for (let i = 0; i < this.trashPositions.length; i++) {
@@ -181,6 +177,12 @@ export default class Game {
       }
     });
 
+    this.canvas.addEventListener("touchstart", () => {
+      if (this.showStartScreen) {
+        this.startGameFromTitle();
+      }
+    }, { passive: true });
+
     window.addEventListener("keyup", (e) => {
       this.keys[e.key] = false;
     });
@@ -236,14 +238,14 @@ export default class Game {
     this.gamepadButtons["A"] = !!aPressed;
     this.gamepadButtons["X"] = !!xPressed;
 
-    const dUp    = pad.buttons[12] && pad.buttons[12].pressed;
-    const dDown  = pad.buttons[13] && pad.buttons[13].pressed;
-    const dLeft  = pad.buttons[14] && pad.buttons[14].pressed;
+    const dUp = pad.buttons[12] && pad.buttons[12].pressed;
+    const dDown = pad.buttons[13] && pad.buttons[13].pressed;
+    const dLeft = pad.buttons[14] && pad.buttons[14].pressed;
     const dRight = pad.buttons[15] && pad.buttons[15].pressed;
 
-    this.gamepadButtons["DUP"]    = !!dUp;
-    this.gamepadButtons["DDOWN"]  = !!dDown;
-    this.gamepadButtons["DLEFT"]  = !!dLeft;
+    this.gamepadButtons["DUP"] = !!dUp;
+    this.gamepadButtons["DDOWN"] = !!dDown;
+    this.gamepadButtons["DLEFT"] = !!dLeft;
     this.gamepadButtons["DRIGHT"] = !!dRight;
 
     const axes = pad.axes || [];
@@ -252,10 +254,10 @@ export default class Game {
 
     const deadzone = 0.25;
 
-    this.gamepadButtons["LLEFT"]  = lx < -deadzone;
-    this.gamepadButtons["LRIGHT"] = lx >  deadzone;
-    this.gamepadButtons["LUP"]    = ly < -deadzone;
-    this.gamepadButtons["LDOWN"]  = ly >  deadzone;
+    this.gamepadButtons["LLEFT"] = lx < -deadzone;
+    this.gamepadButtons["LRIGHT"] = lx > deadzone;
+    this.gamepadButtons["LUP"] = ly < -deadzone;
+    this.gamepadButtons["LDOWN"] = ly > deadzone;
 
     if (this.showStartScreen) {
       let anyButtonPressed = false;
@@ -416,10 +418,10 @@ export default class Game {
         this.keys["Control"] = true;
       }
 
-      const left  = this.gamepadButtons["DLEFT"]  || this.gamepadButtons["LLEFT"];
+      const left = this.gamepadButtons["DLEFT"] || this.gamepadButtons["LLEFT"];
       const right = this.gamepadButtons["DRIGHT"] || this.gamepadButtons["LRIGHT"];
 
-      this.keys["ArrowLeft"]  = left;
+      this.keys["ArrowLeft"] = left;
       this.keys["ArrowRight"] = right;
     }
 
@@ -489,10 +491,10 @@ export default class Game {
 
           const correct =
             (binType === "amarillo" && trashType === "plastic") ||
-            (binType === "azul"     && trashType === "paper")   ||
-            (binType === "verde"    && trashType === "glass")   ||
-            (binType === "marron"   && trashType === "organic") ||
-            (binType === "gris"     && trashType === "resto");
+            (binType === "azul" && trashType === "paper") ||
+            (binType === "verde" && trashType === "glass") ||
+            (binType === "marron" && trashType === "organic") ||
+            (binType === "gris" && trashType === "resto");
 
           if (correct) {
             this.playRandomSound(this.successSounds);
@@ -507,7 +509,7 @@ export default class Game {
               setTimeout(() => {
                 this.finishSound.currentTime = 0;
                 this.finishSound.play().catch(() => {});
-              }, 2500); // aquí puedes ajustar el retraso del sonido "terminado"
+              }, 2500);
             }
           } else {
             this.playRandomSound(this.failSounds);
@@ -535,7 +537,6 @@ export default class Game {
     this.player = new Player(100, this.groundY - 92);
     this.cameraX = 0;
 
-    // Nuevos tipos aleatorios en las mismas posiciones
     const shuffledDefs = this.shuffleArray(this.trashDefinitions);
     this.trashItems = [];
     for (let i = 0; i < this.trashPositions.length; i++) {
