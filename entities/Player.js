@@ -87,6 +87,7 @@ export default class Player {
 
     // Colisión con plataformas (solo por arriba)
     for (const p of platforms) {
+      const margen = 10;
       if (
         this.x < p.x + p.width &&
         this.x + this.width > p.x &&
