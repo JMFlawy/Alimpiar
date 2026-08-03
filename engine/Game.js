@@ -150,6 +150,23 @@ export default class Game {
       this.truckFrames.push(img);
     }
 
+    // --- VÍDEO DE RECOGIDA DEL CAMIÓN ---
+this.truckVideo = document.createElement("video");
+this.truckVideo.src = "assets/contenedores/video.mp4";
+this.truckVideo.preload = "auto";
+this.truckVideo.playsInline = true;
+
+this.truckVideoPlaying = false;
+this.truckVideoFinished = false;
+
+this.truckVideo.addEventListener("ended", () => {
+this.truckVideoPlaying = false;
+this.truckVideoFinished = true;
+this.yellowVisible = true;
+this.truckLeaving = true;
+this.truckLeaveTime = performance.now();
+});
+
     this.truckAnimIndex = 0;
     this.truckAnimCounter = 0;
 
