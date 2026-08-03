@@ -603,10 +603,6 @@ this.basuratSound.currentTime = 0;
     this.truckStopTime = null;
     this.truckLeaveTime = null;
 
-    this.truckLeaving = false;
-    this.truckStopTime = null;
-    this.truckLeaveTime = null;
-
     this.truckVideoPlaying = false;
     this.truckVideoFinished = false;
 
