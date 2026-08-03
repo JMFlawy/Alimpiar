@@ -196,7 +196,7 @@ const bindTouchButton = (id, key) => {
         e.preventDefault();
 
         this.keys[key] = true;
-
+console.log(key, this.keys);
         if (!this.touchMusicStarted) {
 
             this.touchMusicStarted = true;
