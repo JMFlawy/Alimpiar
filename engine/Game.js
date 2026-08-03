@@ -1,9 +1,8 @@
-import Player from "../entities/Player.js";
-import Trash from "../entities/Trash.js";
-import Container from "../entities/Container.js";
+import Player from "./entities/Player.js";
+import Trash from "./entities/Trash.js";
+import Container from "./entities/Container.js";
 
 export default class Game {
-  // Barajar un array (Fisher–Yates) [web:331]
   shuffleArray(arr) {
     const shuffled = arr.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -73,50 +72,45 @@ export default class Game {
     this.player = new Player(100, this.groundY - 92);
 
     this.platforms = [
-      { x: 260,  y: this.groundY - 90,  width: 200, height: 20 },
-      { x: 520,  y: this.groundY - 120, width: 180, height: 20 },
-      { x: 780,  y: this.groundY - 140, width: 180, height: 20 },
+      { x: 260, y: this.groundY - 90, width: 200, height: 20 },
+      { x: 520, y: this.groundY - 120, width: 180, height: 20 },
+      { x: 780, y: this.groundY - 140, width: 180, height: 20 },
       { x: 1040, y: this.groundY - 120, width: 200, height: 20 },
       { x: 1340, y: this.groundY - 140, width: 200, height: 20 }
     ];
 
     this.containers = [
-      new Container(300,  this.groundY - 85, "amarillo"),
-      new Container(700,  this.groundY - 85, "azul"),
+      new Container(300, this.groundY - 85, "amarillo"),
+      new Container(700, this.groundY - 85, "azul"),
       new Container(1100, this.groundY - 85, "verde"),
       new Container(1500, this.groundY - 85, "marron"),
       new Container(1900, this.groundY - 85, "gris")
     ];
 
-    // Posiciones fijas de basura (se mantienen iguales cada partida)
     this.trashPositions = [
-      { x: 380,  y: this.groundY - 30 },
-      { x: 450,  y: this.groundY - 30 },
-      { x: 580,  y: this.groundY - 120 - 30 },
-      { x: 840,  y: this.groundY - 140 - 30 },
+      { x: 380, y: this.groundY - 30 },
+      { x: 450, y: this.groundY - 30 },
+      { x: 580, y: this.groundY - 120 - 30 },
+      { x: 840, y: this.groundY - 140 - 30 },
       { x: 1260, y: this.groundY - 120 - 30 },
       { x: 1660, y: this.groundY - 30 }
     ];
 
-    // Tipos posibles de basura (se barajan cada partida)
     this.trashDefinitions = [
-      { type: "paper",   color: "azul"     },
+      { type: "paper", color: "azul" },
       { type: "plastic", color: "amarillo" },
       { type: "plastic", color: "amarillo" },
-      { type: "glass",   color: "verde"    },
-      { type: "organic", color: "marron"   },
-      { type: "resto",   color: "restos"   }
+      { type: "glass", color: "verde" },
+      { type: "organic", color: "marron" },
+      { type: "resto", color: "restos" }
     ];
 
-    // Crear basura con posiciones fijas y tipos aleatorios
     this.trashItems = [];
     const shuffledDefsInit = this.shuffleArray(this.trashDefinitions);
     for (let i = 0; i < this.trashPositions.length; i++) {
       const pos = this.trashPositions[i];
       const def = shuffledDefsInit[i];
-      this.trashItems.push(
-        new Trash(pos.x, pos.y, def.type, def.color)
-      );
+      this.trashItems.push(new Trash(pos.x, pos.y, def.type, def.color));
     }
 
     this.remainingTrash = this.trashItems.length;
@@ -181,18 +175,22 @@ export default class Game {
       }
     });
 
+    this.canvas.addEventListener("touchstart", () => {
+      if (this.showStartScreen) {
+        this.startGameFromTitle();
+      }
+    }, { passive: true });
+
     window.addEventListener("keyup", (e) => {
       this.keys[e.key] = false;
     });
 
     window.addEventListener("gamepadconnected", (e) => {
       this.gamepad = e.gamepad;
-      console.log("Gamepad conectado:", this.gamepad.id);
     });
 
     window.addEventListener("gamepaddisconnected", (e) => {
       if (this.gamepad && e.gamepad.index === this.gamepad.index) {
-        console.log("Gamepad desconectado:", this.gamepad.id);
         this.gamepad = null;
       }
     });
@@ -211,7 +209,6 @@ export default class Game {
 
   updateGamepadState() {
     if (!navigator.getGamepads) return;
-
     const pads = navigator.getGamepads();
     if (!pads) return;
 
@@ -230,32 +227,23 @@ export default class Game {
 
     this.prevGamepadButtons = { ...this.gamepadButtons };
 
-    const aPressed = pad.buttons[0] && pad.buttons[0].pressed;
-    const xPressed = pad.buttons[2] && pad.buttons[2].pressed;
+    this.gamepadButtons["A"] = !!(pad.buttons[0] && pad.buttons[0].pressed);
+    this.gamepadButtons["X"] = !!(pad.buttons[2] && pad.buttons[2].pressed);
 
-    this.gamepadButtons["A"] = !!aPressed;
-    this.gamepadButtons["X"] = !!xPressed;
-
-    const dUp    = pad.buttons[12] && pad.buttons[12].pressed;
-    const dDown  = pad.buttons[13] && pad.buttons[13].pressed;
-    const dLeft  = pad.buttons[14] && pad.buttons[14].pressed;
-    const dRight = pad.buttons[15] && pad.buttons[15].pressed;
-
-    this.gamepadButtons["DUP"]    = !!dUp;
-    this.gamepadButtons["DDOWN"]  = !!dDown;
-    this.gamepadButtons["DLEFT"]  = !!dLeft;
-    this.gamepadButtons["DRIGHT"] = !!dRight;
+    this.gamepadButtons["DUP"] = !!(pad.buttons[12] && pad.buttons[12].pressed);
+    this.gamepadButtons["DDOWN"] = !!(pad.buttons[13] && pad.buttons[13].pressed);
+    this.gamepadButtons["DLEFT"] = !!(pad.buttons[14] && pad.buttons[14].pressed);
+    this.gamepadButtons["DRIGHT"] = !!(pad.buttons[15] && pad.buttons[15].pressed);
 
     const axes = pad.axes || [];
     const lx = axes[0] || 0;
     const ly = axes[1] || 0;
-
     const deadzone = 0.25;
 
-    this.gamepadButtons["LLEFT"]  = lx < -deadzone;
-    this.gamepadButtons["LRIGHT"] = lx >  deadzone;
-    this.gamepadButtons["LUP"]    = ly < -deadzone;
-    this.gamepadButtons["LDOWN"]  = ly >  deadzone;
+    this.gamepadButtons["LLEFT"] = lx < -deadzone;
+    this.gamepadButtons["LRIGHT"] = lx > deadzone;
+    this.gamepadButtons["LUP"] = ly < -deadzone;
+    this.gamepadButtons["LDOWN"] = ly > deadzone;
 
     if (this.showStartScreen) {
       let anyButtonPressed = false;
@@ -276,10 +264,8 @@ export default class Game {
     this.fadeAlpha = 0;
     this.sequenceFinished = false;
 
-    try {
-      this.backgroundMusic.currentTime = 0;
-      this.backgroundMusic.play().catch(() => {});
-    } catch (e) {}
+    this.backgroundMusic.currentTime = 0;
+    this.backgroundMusic.play().catch(() => {});
   }
 
   playRandomSound(list) {
@@ -295,11 +281,7 @@ export default class Game {
     this.truckSequenceStarted = true;
 
     const yellowContainer = this.containers.find(c => c.type === "amarillo");
-    if (yellowContainer) {
-      this.truckTargetX = yellowContainer.x - 60;
-    } else {
-      this.truckTargetX = this.cameraX + this.width / 2;
-    }
+    this.truckTargetX = yellowContainer ? yellowContainer.x - 60 : this.cameraX + this.width / 2;
 
     this.truckX = this.cameraX + this.width + 300;
     this.truckY = this.groundY;
@@ -311,10 +293,8 @@ export default class Game {
     this.truckStopTime = null;
     this.yellowVisible = true;
 
-    try {
-      this.circulandoSound.currentTime = 0;
-      this.circulandoSound.play().catch(() => {});
-    } catch (e) {}
+    this.circulandoSound.currentTime = 0;
+    this.circulandoSound.play().catch(() => {});
   }
 
   updateTruckSequence() {
@@ -322,7 +302,6 @@ export default class Game {
 
     if (!this.truckLeaving && this.truckX > this.truckTargetX) {
       this.truckX -= speed;
-
       if (this.truckX <= this.truckTargetX && this.truckStopTime === null) {
         this.truckStopTime = performance.now();
       }
@@ -331,9 +310,7 @@ export default class Game {
 
     if (!this.truckLeaving && this.truckStopTime !== null && this.truckAnimIndex === 0) {
       const elapsedStop = performance.now() - this.truckStopTime;
-      if (elapsedStop < 1000) {
-        return;
-      }
+      if (elapsedStop < 1000) return;
     }
 
     if (!this.truckLeaving) {
@@ -349,17 +326,13 @@ export default class Game {
 
         if (this.truckAnimIndex >= 2 && this.truckAnimIndex <= 4) {
           if (this.basuratSound.paused) {
-            try {
-              this.basuratSound.currentTime = 0;
-              this.basuratSound.play().catch(() => {});
-            } catch (e) {}
+            this.basuratSound.currentTime = 0;
+            this.basuratSound.play().catch(() => {});
           }
         } else {
           if (!this.basuratSound.paused) {
-            try {
-              this.basuratSound.pause();
-              this.basuratSound.currentTime = 0;
-            } catch (e) {}
+            this.basuratSound.pause();
+            this.basuratSound.currentTime = 0;
           }
         }
 
@@ -375,7 +348,6 @@ export default class Game {
       }
     } else {
       this.truckX -= speed;
-
       const offscreenLimit = this.cameraX - 400;
       if (this.truckX < offscreenLimit) {
         this.truckSequenceStarted = false;
@@ -383,15 +355,11 @@ export default class Game {
         this.fadeToBlack = true;
         this.fadeAlpha = 0;
 
-        try {
-          this.circulandoSound.pause();
-          this.circulandoSound.currentTime = 0;
-        } catch (e) {}
+        this.circulandoSound.pause();
+        this.circulandoSound.currentTime = 0;
 
-        try {
-          this.basuratSound.pause();
-          this.basuratSound.currentTime = 0;
-        } catch (e) {}
+        this.basuratSound.pause();
+        this.basuratSound.currentTime = 0;
       }
     }
   }
@@ -399,27 +367,19 @@ export default class Game {
   update() {
     const now = performance.now();
 
-    if (this.showStartScreen) {
-      return;
-    }
+    if (this.showStartScreen) return;
 
     if (this.gamepad) {
-      if (this.gamepadButtons["A"]) {
-        this.keys["ArrowUp"] = true;
-      } else {
-        this.keys["ArrowUp"] = false;
-      }
+      this.keys["ArrowUp"] = !!this.gamepadButtons["A"];
 
-      const prevX = this.prevGamepadButtons["X"];
-      const currX = this.gamepadButtons["X"];
-      if (!prevX && currX) {
+      if (!this.prevGamepadButtons["X"] && this.gamepadButtons["X"]) {
         this.keys["Control"] = true;
       }
 
-      const left  = this.gamepadButtons["DLEFT"]  || this.gamepadButtons["LLEFT"];
+      const left = this.gamepadButtons["DLEFT"] || this.gamepadButtons["LLEFT"];
       const right = this.gamepadButtons["DRIGHT"] || this.gamepadButtons["LRIGHT"];
 
-      this.keys["ArrowLeft"]  = left;
+      this.keys["ArrowLeft"] = left;
       this.keys["ArrowRight"] = right;
     }
 
@@ -440,8 +400,7 @@ export default class Game {
     }
 
     if (this.gameOver && this.finishTime !== null) {
-      const elapsed = now - this.finishTime;
-      if (elapsed >= 8000 && !this.truckSequenceStarted) {
+      if (now - this.finishTime >= 8000 && !this.truckSequenceStarted) {
         this.startTruckSequence();
       }
     }
@@ -466,11 +425,6 @@ export default class Game {
 
     this.updateCamera();
 
-    if (this.truckSequenceStarted) {
-      this.updateTruckSequence();
-      return;
-    }
-
     if (!this.collectedItem) {
       for (const item of this.trashItems) {
         if (!item.collected && this.isColliding(this.player, item)) {
@@ -489,25 +443,23 @@ export default class Game {
 
           const correct =
             (binType === "amarillo" && trashType === "plastic") ||
-            (binType === "azul"     && trashType === "paper")   ||
-            (binType === "verde"    && trashType === "glass")   ||
-            (binType === "marron"   && trashType === "organic") ||
-            (binType === "gris"     && trashType === "resto");
+            (binType === "azul" && trashType === "paper") ||
+            (binType === "verde" && trashType === "glass") ||
+            (binType === "marron" && trashType === "organic") ||
+            (binType === "gris" && trashType === "resto");
 
           if (correct) {
             this.playRandomSound(this.successSounds);
-
             this.collectedItem = null;
             this.remainingTrash--;
 
             if (this.remainingTrash <= 0) {
               this.gameOver = true;
               this.finishTime = performance.now();
-
               setTimeout(() => {
                 this.finishSound.currentTime = 0;
                 this.finishSound.play().catch(() => {});
-              }, 2500); // aquí puedes ajustar el retraso del sonido "terminado"
+              }, 2500);
             }
           } else {
             this.playRandomSound(this.failSounds);
@@ -535,15 +487,12 @@ export default class Game {
     this.player = new Player(100, this.groundY - 92);
     this.cameraX = 0;
 
-    // Nuevos tipos aleatorios en las mismas posiciones
     const shuffledDefs = this.shuffleArray(this.trashDefinitions);
     this.trashItems = [];
     for (let i = 0; i < this.trashPositions.length; i++) {
       const pos = this.trashPositions[i];
       const def = shuffledDefs[i];
-      this.trashItems.push(
-        new Trash(pos.x, pos.y, def.type, def.color)
-      );
+      this.trashItems.push(new Trash(pos.x, pos.y, def.type, def.color));
     }
 
     this.remainingTrash = this.trashItems.length;
@@ -567,19 +516,11 @@ export default class Game {
     if (this.showStartScreen) {
       if (this.startImage.complete && this.startImage.naturalWidth > 0) {
         const img = this.startImage;
-        const imgW = img.naturalWidth;
-        const imgH = img.naturalHeight;
-
-        const scale = Math.min(
-          this.width / imgW,
-          this.height / imgH
-        );
-        const drawW = imgW * scale;
-        const drawH = imgH * scale;
-
+        const scale = Math.min(this.width / img.naturalWidth, this.height / img.naturalHeight);
+        const drawW = img.naturalWidth * scale;
+        const drawH = img.naturalHeight * scale;
         const x = (this.width - drawW) / 2;
         const y = (this.height - drawH) / 2;
-
         this.ctx.drawImage(img, x, y, drawW, drawH);
       } else {
         this.ctx.fillStyle = "#000000";
@@ -612,11 +553,9 @@ export default class Game {
 
     if (this.remainingImage.complete && this.remainingImage.naturalWidth > 0) {
       const img = this.remainingImage;
-
       const scale = 0.15;
       const w = img.naturalWidth * scale;
       const h = img.naturalHeight * scale;
-
       const x = 10;
       const y = 10;
 
@@ -629,10 +568,8 @@ export default class Game {
     }
 
     this.ctx.save();
-
     this.ctx.fillStyle = "#ffffff";
     this.ctx.fillRect(counterBoxX, counterBoxY, counterBoxW, counterBoxH);
-
     this.ctx.strokeStyle = "#888888";
     this.ctx.lineWidth = 2;
     this.ctx.strokeRect(counterBoxX, counterBoxY, counterBoxW, counterBoxH);
@@ -651,15 +588,11 @@ export default class Game {
     this.ctx.lineTo(counterBoxX + 1, counterBoxY + counterBoxH - 1);
     this.ctx.stroke();
 
-    const textX = counterBoxX + counterBoxW / 2;
-    const textY = counterBoxY + counterBoxH / 2;
-
     this.ctx.fillStyle = "#333333";
     this.ctx.font = "24px Arial";
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
-    this.ctx.fillText(`${this.remainingTrash}`, textX, textY);
-
+    this.ctx.fillText(`${this.remainingTrash}`, counterBoxX + counterBoxW / 2, counterBoxY + counterBoxH / 2);
     this.ctx.restore();
 
     if (this.gameOver) {
@@ -686,25 +619,17 @@ export default class Game {
     if (img.complete && img.naturalWidth > 0) {
       const imgWidth = img.naturalWidth;
       const imgHeight = img.naturalHeight;
-
       const scale = (this.height * 1.1) / imgHeight;
       const drawWidth = imgWidth * scale;
       const drawHeight = imgHeight * scale;
 
       const maxCamera = this.worldWidth - this.width;
       const t = maxCamera > 0 ? this.cameraX / maxCamera : 0;
-
       const maxOffset = Math.max(0, drawWidth - this.width);
       const offsetX = -t * maxOffset;
       const offsetY = -(drawHeight - this.height) * 0.5;
 
-      this.ctx.drawImage(
-        img,
-        offsetX,
-        offsetY,
-        drawWidth,
-        drawHeight
-      );
+      this.ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     } else {
       this.ctx.fillStyle = "#87cfff";
       this.ctx.fillRect(0, 0, this.width, this.height);
@@ -713,19 +638,12 @@ export default class Game {
     if (this.groundImage.complete && this.groundImage.naturalWidth > 0) {
       const tileW = this.groundImage.naturalWidth;
       const tileH = this.groundImage.naturalHeight;
-
       const scale = (this.height - this.groundY) / tileH;
       const drawH = tileH * scale;
       const drawW = tileW * scale;
 
       for (let x = -this.cameraX % drawW; x < this.width; x += drawW) {
-        this.ctx.drawImage(
-          this.groundImage,
-          x,
-          this.groundY,
-          drawW,
-          drawH
-        );
+        this.ctx.drawImage(this.groundImage, x, this.groundY, drawW, drawH);
       }
     } else {
       this.ctx.fillStyle = "#6cc36c";
@@ -735,19 +653,12 @@ export default class Game {
     if (this.bushImage.complete && this.bushImage.naturalWidth > 0) {
       const bushW = this.bushImage.naturalWidth;
       const bushH = this.bushImage.naturalHeight;
-
       const scaleBush = 1 / 8;
       const drawBushW = bushW * scaleBush;
       const drawBushH = bushH * scaleBush;
 
       for (let x = -this.cameraX % 240; x < this.width; x += 240) {
-        this.ctx.drawImage(
-          this.bushImage,
-          x,
-          this.groundY - drawBushH,
-          drawBushW,
-          drawBushH
-        );
+        this.ctx.drawImage(this.bushImage, x, this.groundY - drawBushH, drawBushW, drawBushH);
       }
     } else {
       this.ctx.fillStyle = "#5aa14f";
@@ -766,19 +677,11 @@ export default class Game {
       for (const platform of this.platforms) {
         const screenX = platform.x - this.cameraX;
         const screenY = platform.y;
-
         const scaleX = platform.width / imgW;
         const scaleY = platform.height / imgH;
         const drawW = imgW * scaleX;
         const drawH = imgH * scaleY;
-
-        this.ctx.drawImage(
-          img,
-          screenX,
-          screenY,
-          drawW,
-          drawH
-        );
+        this.ctx.drawImage(img, screenX, screenY, drawW, drawH);
       }
     } else {
       this.ctx.fillStyle = "#8b5a2b";
@@ -801,7 +704,6 @@ export default class Game {
         const scale = 0.8;
         const w = img.naturalWidth * scale;
         const h = img.naturalHeight * scale;
-
         this.ctx.drawImage(img, screenX, screenY - h + 25, w, h);
       }
     }
@@ -815,11 +717,7 @@ export default class Game {
     }
 
     for (const container of this.containers) {
-      if (
-        this.truckSequenceStarted &&
-        container.type === "amarillo" &&
-        !this.yellowVisible
-      ) {
+      if (this.truckSequenceStarted && container.type === "amarillo" && !this.yellowVisible) {
         continue;
       }
       container.draw(this.ctx, this.cameraX);
