@@ -11,15 +11,13 @@ html, body {
 #gameWrapper {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: #111;
+  overflow: hidden;
 }
 
 #gameCanvas {
+  display: block;
   background: #87cfff;
-  border: 2px solid #000;
+  border: 0;
   image-rendering: pixelated;
-  /* el tamaño real lo controlamos desde JS */
 }
