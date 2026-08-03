@@ -185,7 +185,56 @@ export default class Game {
     window.addEventListener("keyup", (e) => {
       this.keys[e.key] = false;
     });
+const bindTouchButton = (id, key) => {
 
+    const button = document.getElementById(id);
+
+    if (!button) return;
+
+    const press = (e) => {
+
+        e.preventDefault();
+
+        this.keys[key] = true;
+
+        if (!this.touchMusicStarted) {
+
+            this.touchMusicStarted = true;
+
+            if (this.showStartScreen) {
+                this.startGameFromTitle();
+            }
+
+        }
+
+    };
+
+    const release = (e) => {
+
+        e.preventDefault();
+
+        this.keys[key] = false;
+
+    };
+
+    button.addEventListener("pointerdown", press);
+
+    button.addEventListener("pointerup", release);
+
+    button.addEventListener("pointerleave", release);
+
+    button.addEventListener("pointercancel", release);
+
+};
+
+bindTouchButton("btnLeft", "ArrowLeft");
+
+bindTouchButton("btnRight", "ArrowRight");
+
+bindTouchButton("btnJump", "ArrowUp");
+
+bindTouchButton("btnAction", "Control");
+    
     window.addEventListener("gamepadconnected", (e) => {
       this.gamepad = e.gamepad;
       console.log("Gamepad conectado:", this.gamepad.id);
