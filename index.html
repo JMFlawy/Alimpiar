@@ -4,14 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>¡Limpia, limpia!</title>
-
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body, html {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #portada, #gameWrapper {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #portada img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #btnJugar {
+      position: absolute;
+      left: 50%;
+      bottom: 10%;
+      transform: translateX(-50%);
+      z-index: 2;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    #gameWrapper {
+      display: none;
+    }
+    #gameCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
 </head>
 <body>
+  <div id="portada">
+    <img src="assets/backgrounds/portada.png" alt="Portada del juego" />
+    <button id="btnJugar">Jugar</button>
+  </div>
+
   <div id="gameWrapper">
     <canvas id="gameCanvas"></canvas>
   </div>
 
   <script type="module" src="main.js"></script>
+  <script>
+    document.getElementById('btnJugar').addEventListener('click', () => {
+      document.getElementById('portada').style.display = 'none';
+      document.getElementById('gameWrapper').style.display = 'block';
+      if (window.iniciarJuego) window.iniciarJuego();
+    });
+  </script>
 </body>
 </html>
