@@ -13,7 +13,7 @@ const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     this.vx = 0;
     this.vy = 0;
 
-    this.gravity = 0.1;
+    this.gravity = isMobile ? 0.20 : 0.16;
     this.jumpStrength = -4;
 
     this.onGround = false;
