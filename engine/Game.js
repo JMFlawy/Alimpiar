@@ -217,13 +217,13 @@ const bindTouchButton = (id, key) => {
 
     };
 
-    button.addEventListener("pointerdown", press);
+    button.addEventListener("touchstart", press, { passive:false });
+    button.addEventListener("touchend", release, { passive:false });
+    button.addEventListener("touchcancel", release, { passive:false });
 
-    button.addEventListener("pointerup", release);
-
-    button.addEventListener("pointerleave", release);
-
-    button.addEventListener("pointercancel", release);
+    button.addEventListener("mousedown", press);
+    button.addEventListener("mouseup", release);
+    button.addEventListener("mouseleave", release);
 
 };
 
