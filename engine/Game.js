@@ -388,89 +388,88 @@ bindTouchButton("btnAction", "Control");
     } catch (e) {}
   }
 
-  updateTruckSequence() {
-    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+ updateTruckSequence() {
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 const speed = isMobile ? 1.8 : 0.8;
 
-    if (!this.truckLeaving && this.truckX > this.truckTargetX) {
-      this.truckX -= speed;
+// 1. El camión se acerca al contenedor amarillo.
+if (
+!this.truckLeaving &&
+!this.truckVideoPlaying &&
+!this.truckVideoFinished
+) {
+if (this.truckX > this.truckTargetX) {
+this.truckX -= speed;
 
-      if (this.truckX <= this.truckTargetX && this.truckStopTime === null) {
-        this.truckStopTime = performance.now();
-      }
-      return;
-    }
+if (this.truckX <= this.truckTargetX) {
+this.truckX = this.truckTargetX;
+this.truckStopTime = performance.now();
+}
 
-    if (!this.truckLeaving && this.truckStopTime !== null && this.truckAnimIndex === 0) {
-      const elapsedStop = performance.now() - this.truckStopTime;
-      if (elapsedStop < 1000) {
-        return;
-      }
-    }
+return;
+}
 
-    if (!this.truckLeaving) {
-      this.truckAnimCounter++;
-      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-const animDelay = isMobile ? 130 : 290;
+// 2. Espera un segundo y reproduce el vídeo.
+if (this.truckStopTime !== null) {
+const elapsedStop = performance.now() - this.truckStopTime;
 
-if (this.truckAnimCounter >= animDelay) {
-        this.truckAnimCounter = 0;
+if (elapsedStop < 1000) {
+return;
+}
 
-        if (this.truckAnimIndex === 0) {
-          this.yellowVisible = false;
-        }
+this.truckVideoPlaying = true;
+this.yellowVisible = false;
 
-        this.truckAnimIndex++;
+try {
+this.basuratSound.pause();
+this.basuratSound.currentTime = 0;
+} catch (e) {}
 
-        if (this.truckAnimIndex >= 2 && this.truckAnimIndex <= 4) {
-          if (this.basuratSound.paused) {
-            try {
-              this.basuratSound.currentTime = 0;
-              this.basuratSound.play().catch(() => {});
-            } catch (e) {}
-          }
-        } else {
-          if (!this.basuratSound.paused) {
-            try {
-              this.basuratSound.pause();
-              this.basuratSound.currentTime = 0;
-            } catch (e) {}
-          }
-        }
+this.truckVideo.currentTime = 0;
 
-        if (this.truckAnimIndex === this.truckFrames.length - 2) {
-          this.yellowVisible = true;
-        }
+this.truckVideo.play().catch(() => {
+// Si el navegador no deja reproducir el vídeo,
+// el camión continuará su salida igualmente.
+this.truckVideoPlaying = false;
+this.truckVideoFinished = true;
+this.yellowVisible = true;
+this.truckLeaving = true;
+this.truckLeaveTime = performance.now();
+});
 
-        if (this.truckAnimIndex >= this.truckFrames.length) {
-          this.truckAnimIndex = this.truckFrames.length - 1;
-          this.truckLeaving = true;
-          this.truckLeaveTime = performance.now();
-        }
-      }
-    } else {
-      this.truckX -= speed;
+return;
+}
+}
 
-      const offscreenLimit = this.cameraX - 400;
-      if (this.truckX < offscreenLimit) {
-        this.truckSequenceStarted = false;
-        this.sequenceFinished = true;
-        this.fadeToBlack = true;
-        this.fadeAlpha = 0;
+// 3. Mientras se reproduce el vídeo, el camión permanece quieto.
+if (this.truckVideoPlaying) {
+return;
+}
 
-        try {
-          this.circulandoSound.pause();
-          this.circulandoSound.currentTime = 0;
-        } catch (e) {}
+// 4. Cuando termina el vídeo, el camión se marcha.
+if (this.truckLeaving) {
+this.truckX -= speed;
 
-        try {
-          this.basuratSound.pause();
-          this.basuratSound.currentTime = 0;
-        } catch (e) {}
-      }
-    }
-  }
+const offscreenLimit = this.cameraX - 400;
 
+if (this.truckX < offscreenLimit) {
+this.truckSequenceStarted = false;
+this.sequenceFinished = true;
+this.fadeToBlack = true;
+this.fadeAlpha = 0;
+
+try {
+this.circulandoSound.pause();
+this.circulandoSound.currentTime = 0;
+} catch (e) {}
+
+try {
+this.basuratSound.pause();
+this.basuratSound.currentTime = 0;
+} catch (e) {}
+}
+}
+}
   update() {
     const now = performance.now();
 
