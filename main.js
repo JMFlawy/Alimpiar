@@ -59,19 +59,16 @@ function init() {
 
   game.start();
 
-  const tryPlayMusic = () => {
+ const tryPlayMusic = () => {
 
-    music.play().catch(() => {});
+    if (!music.paused) return;
 
-    window.removeEventListener("click", tryPlayMusic);
-    window.removeEventListener("keydown", tryPlayMusic);
-  };
+    music.play().catch(err => console.log(err));
 
-  window.addEventListener("click", tryPlayMusic);
-  window.addEventListener("keydown", tryPlayMusic);
-  document.addEventListener("touchstart", tryPlayMusic, { once: true });
-document.addEventListener("pointerdown", tryPlayMusic, { once: true });
-}
+};
+
+window.addEventListener("pointerdown", tryPlayMusic, { passive: true });
+window.addEventListener("keydown", tryPlayMusic);
 
 window.addEventListener("resize", resizeCanvas);
 
