@@ -603,6 +603,14 @@ this.basuratSound.currentTime = 0;
     this.truckStopTime = null;
     this.truckLeaveTime = null;
 
+    this.truckVideoPlaying = false;
+this.truckVideoFinished = false;
+
+try {
+this.truckVideo.pause();
+this.truckVideo.currentTime = 0;
+} catch (e) {}
+
     this.gameOver = false;
     this.finishTime = null;
 
