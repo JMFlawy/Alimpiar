@@ -162,20 +162,33 @@ export default class Player {
 
     const visualOffsetY = (!this.onPlatform && this.onGround) ? 15 : 5;
 
-    const shadowCenterX = screenX + this.width / 2;
-    const shadowCenterY = screenY + this.height + visualOffsetY - 2;
-    const shadowRadiusX = this.onGround ? 22 : 16;
-    const shadowRadiusY = this.onGround ? 6 : 4;
-    const shadowAlpha = this.onGround ? 0.22 : 0.12;
+    let shadowY = groundY;
+    let shadowAlpha = 0.22;
+    let shadowW = 46;
+    let shadowH = 8;
+
+    if (this.onPlatform) {
+      shadowY = this.y + this.height - 2;
+      shadowAlpha = 0.18;
+      shadowW = 40;
+      shadowH = 7;
+    } else if (!this.onGround) {
+      shadowY = groundY;
+      shadowAlpha = 0.10;
+      shadowW = 34;
+      shadowH = 5;
+    }
+
+    const shadowX = screenX + this.width / 2;
 
     ctx.save();
     ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
     ctx.beginPath();
     ctx.ellipse(
-      shadowCenterX,
-      shadowCenterY,
-      shadowRadiusX,
-      shadowRadiusY,
+      shadowX,
+      shadowY,
+      shadowW / 2,
+      shadowH / 2,
       0,
       0,
       Math.PI * 2
@@ -240,18 +253,4 @@ export default class Player {
     const drawH = 32;
 
     const objX = screenX + this.width / 2 - drawW / 2;
-    const objY = screenYWithOffset - drawH - 8;
-
-    ctx.drawImage(
-      img,
-      sx,
-      sy,
-      spriteW,
-      spriteH,
-      objX,
-      objY,
-      drawW,
-      drawH
-    );
-  }
-}
+    const objY = screenYWithOffset - drawH -
