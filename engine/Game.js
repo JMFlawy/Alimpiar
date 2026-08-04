@@ -684,6 +684,24 @@ this.basuratSound.currentTime = 0;
       return;
     }
 
+   if (this.truckVideoPlaying) {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+
+      if (this.truckVideo.readyState >= 2 && this.truckVideo.videoWidth > 0) {
+        const vw = this.truckVideo.videoWidth;
+        const vh = this.truckVideo.videoHeight;
+        const scale = Math.max(this.width / vw, this.height / vh);
+        const drawW = vw * scale;
+        const drawH = vh * scale;
+        const x = (this.width - drawW) / 2;
+        const y = (this.height - drawH) / 2;
+
+        this.ctx.drawImage(this.truckVideo, x, y, drawW, drawH);
+      }
+
+      return;
+    }
+
     this.drawBackground();
     this.drawWorld();
 
