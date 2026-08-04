@@ -186,9 +186,6 @@ this.truckVideo.addEventListener("error", () => {
     this.truckLeaveTime = null;
     this.truckStopTime = null;
     this.yellowVisible = true;
-    this.highlightColor = null;
-this.highlightTime = 0;
-this.highlightDuration = 0;
 
     window.addEventListener("keydown", (e) => {
       if (this.showStartScreen) {
@@ -582,13 +579,10 @@ this.basuratSound.currentTime = 0;
             (binType === "gris"     && trashType === "resto");
 
           if (correct) {
-  this.playRandomSound(this.successSounds);
-  this.highlightColor = "rgba(80, 255, 120, 0.55)";
-  this.highlightTime = performance.now();
-  this.highlightDuration = 140;
+            this.playRandomSound(this.successSounds);
 
-  this.collectedItem = null;
-  this.remainingTrash--;
+            this.collectedItem = null;
+            this.remainingTrash--;
 
             if (this.remainingTrash <= 0) {
               this.gameOver = true;
@@ -600,11 +594,8 @@ this.basuratSound.currentTime = 0;
               }, 2500); // aquí puedes ajustar el retraso del sonido "terminado"
             }
           } else {
-  this.playRandomSound(this.failSounds);
-  this.highlightColor = "rgba(255, 80, 80, 0.45)";
-  this.highlightTime = performance.now();
-  this.highlightDuration = 140;
-}
+            this.playRandomSound(this.failSounds);
+          }
 
           this.keys["Control"] = false;
           break;
@@ -944,7 +935,7 @@ this.basuratSound.currentTime = 0;
       }
     }
 
-        for (const container of this.containers) {
+    for (const container of this.containers) {
       if (
         this.truckSequenceStarted &&
         container.type === "amarillo" &&
@@ -953,18 +944,6 @@ this.basuratSound.currentTime = 0;
         continue;
       }
       container.draw(this.ctx, this.cameraX);
-    }
-
-    if (this.highlightColor) {
-      const elapsed = performance.now() - this.highlightTime;
-      if (elapsed < this.highlightDuration) {
-        this.ctx.save();
-        this.ctx.fillStyle = this.highlightColor;
-        this.ctx.fillRect(0, 0, this.width, this.height);
-        this.ctx.restore();
-      } else {
-        this.highlightColor = null;
-      }
     }
   }
 
