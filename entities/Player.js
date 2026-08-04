@@ -17,6 +17,7 @@ export default class Player {
     this.onGround = false;
     this.onPlatform = false;
     this.facing = 1;
+    this.wasOnPlatform = false;
 
     this.idleFrames = [];
     this.walkFrames = [];
@@ -73,6 +74,7 @@ export default class Player {
     if (this.x < 0) this.x = 0;
     if (this.x + this.width > worldWidth) this.x = worldWidth - this.width;
 
+    this.wasOnPlatform = this.onPlatform;
     this.onGround = false;
     this.onPlatform = false;
 
@@ -163,47 +165,47 @@ export default class Player {
     const visualOffsetY = (!this.onPlatform && this.onGround) ? 15 : 5;
 
     let shadowY = groundY + 12;
-let shadowAlpha = 0.22;
-let shadowW = 48;
-let shadowH = 8;
-let drawShadow = true;
+    let shadowAlpha = 0.22;
+    let shadowW = 48;
+    let shadowH = 8;
+    let drawShadow = true;
 
-if (this.onPlatform) {
-  shadowY = this.y + this.height + 3;
-  shadowAlpha = 0.18;
-  shadowW = 40;
-  shadowH = 7;
-}
+    if (this.onPlatform) {
+      shadowY = this.y + this.height + 3;
+      shadowAlpha = 0.18;
+      shadowW = 40;
+      shadowH = 7;
+    }
 
-if (!this.onGround) {
-  if (this.onPlatform) {
-    drawShadow = false;
-  } else {
-    shadowY = groundY + 10;
-    shadowAlpha = 0.10;
-    shadowW = 34;
-    shadowH = 5;
-  }
-}
+    if (!this.onGround) {
+      if (this.wasOnPlatform) {
+        drawShadow = false;
+      } else {
+        shadowY = groundY + 10;
+        shadowAlpha = 0.10;
+        shadowW = 34;
+        shadowH = 5;
+      }
+    }
 
     const shadowX = screenX + this.width / 2;
 
     if (drawShadow) {
-  ctx.save();
-  ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
-  ctx.beginPath();
-  ctx.ellipse(
-    shadowX,
-    shadowY,
-    shadowW / 2,
-    shadowH / 2,
-    0,
-    0,
-    Math.PI * 2
-  );
-  ctx.fill();
-  ctx.restore();
-}
+      ctx.save();
+      ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+      ctx.beginPath();
+      ctx.ellipse(
+        shadowX,
+        shadowY,
+        shadowW / 2,
+        shadowH / 2,
+        0,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+      ctx.restore();
+    }
 
     if (!img || !img.complete || img.naturalWidth === 0) {
       ctx.fillStyle = "#ffcc66";
