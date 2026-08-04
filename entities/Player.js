@@ -166,6 +166,7 @@ export default class Player {
 let shadowAlpha = 0.22;
 let shadowW = 48;
 let shadowH = 8;
+let drawShadow = true;
 
 if (this.onPlatform) {
   shadowY = this.y + this.height + 3;
@@ -175,10 +176,14 @@ if (this.onPlatform) {
 }
 
 if (!this.onGround) {
-  shadowY = this.onPlatform ? this.y + this.height + 3 : groundY + 10;
-  shadowAlpha = 0.10;
-  shadowW = 34;
-  shadowH = 5;
+  if (this.onPlatform) {
+    drawShadow = false;
+  } else {
+    shadowY = groundY + 10;
+    shadowAlpha = 0.10;
+    shadowW = 34;
+    shadowH = 5;
+  }
 }
 
     const shadowX = screenX + this.width / 2;
