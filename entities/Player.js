@@ -1,13 +1,11 @@
 export default class Player {
   constructor(x, y) {
-    // Posición y física
     this.x = x;
     this.y = y;
 
-    // Hitbox
     this.width = 72;
     this.height = 108;
-const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     this.speed = isMobile ? 3.6 : 1.8;
 
     this.vx = 0;
@@ -20,11 +18,10 @@ const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     this.onPlatform = false;
     this.facing = 1;
 
-    // SPRITES
     this.idleFrames = [];
     this.walkFrames = [];
     this.jumpFrames = [];
-    this.seeFrames = [];   // animación "viendo1/viendo2"
+    this.seeFrames = [];
 
     this.currentAnim = "idle";
     this.currentFrameIndex = 0;
@@ -34,13 +31,13 @@ const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
       idle: 70,
       walk: 26,
       jump: 30,
-      see: 300   // velocidad de viendo1/viendo2
+      see: 300
     };
 
     this.loadFrames(this.idleFrames, ["idle1.png", "idle2.png", "idle3.png"]);
     this.loadFrames(this.walkFrames, ["walk1.png", "walk2.png", "walk3.png", "walk4.png"]);
     this.loadFrames(this.jumpFrames, ["jump1.png", "jump2.png", "jump3.png"]);
-    this.loadFrames(this.seeFrames,  ["viendo1.png", "viendo2.png"]);
+    this.loadFrames(this.seeFrames, ["viendo1.png", "viendo2.png"]);
   }
 
   loadFrames(targetArray, names) {
@@ -52,7 +49,6 @@ const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
   }
 
   update(keys, worldWidth, groundY, platforms) {
-    // Movimiento horizontal normal
     this.vx = 0;
     if (keys["ArrowLeft"]) {
       this.vx = -this.speed;
@@ -63,41 +59,34 @@ const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
       this.facing = 1;
     }
 
-    // Salto normal
     if ((keys["ArrowUp"] || keys[" "]) && this.onGround) {
       this.vy = this.jumpStrength;
       this.onGround = false;
       this.onPlatform = false;
     }
 
-    // Gravedad
     this.vy += this.gravity;
 
-    // Aplicar movimiento
     this.x += this.vx;
     this.y += this.vy;
 
-    // Limitar al mundo
     if (this.x < 0) this.x = 0;
     if (this.x + this.width > worldWidth) this.x = worldWidth - this.width;
 
-    // Reseteo de estado de suelo/plataforma
     this.onGround = false;
     this.onPlatform = false;
 
-    // Colisión con plataformas (solo por arriba)
     for (const p of platforms) {
-      
-const pieIzquierdo = this.x + 14;
-const pieDerecho = this.x + this.width - 14;
+      const pieIzquierdo = this.x + 14;
+      const pieDerecho = this.x + this.width - 14;
 
-if (
-  pieIzquierdo < p.x + p.width &&
-  pieDerecho > p.x &&
-  this.y + this.height > p.y &&
-  this.y + this.height < p.y + p.height &&
-  this.vy >= 0
-) {
+      if (
+        pieIzquierdo < p.x + p.width &&
+        pieDerecho > p.x &&
+        this.y + this.height > p.y &&
+        this.y + this.height < p.y + p.height &&
+        this.vy >= 0
+      ) {
         this.y = p.y - this.height;
         this.vy = 0;
         this.onGround = true;
@@ -105,25 +94,21 @@ if (
       }
     }
 
-    // Suelo principal (solo si no hemos tocado plataforma)
     if (!this.onPlatform && this.y + this.height >= groundY) {
       this.y = groundY - this.height;
       this.vy = 0;
       this.onGround = true;
     }
 
-    // Selección de animación:
-    // - si Game ha puesto currentAnim="see" (al empezar la secuencia final),
-    //   cuando está quieto mantendrá "see"; si se mueve, pasa a "walk".
     if (!this.onGround) {
       this.setAnimation("jump");
     } else if (this.vx !== 0) {
       this.setAnimation("walk");
     } else {
       if (this.currentAnim === "see") {
-        this.setAnimation("see");   // idle especial: viendo1/viendo2
+        this.setAnimation("see");
       } else {
-        this.setAnimation("idle");  // idle normal antes de la secuencia
+        this.setAnimation("idle");
       }
     }
 
@@ -169,34 +154,35 @@ if (
   }
 
   draw(ctx, cameraX, carriedItem) {
-    const shadowX = screenX + this.width / 2 - 24;
-const shadowY = screenY + this.height + 2;
-const shadowW = this.onGround ? 48 : 36;
-const shadowH = this.onGround ? 10 : 7;
-const shadowAlpha = this.onGround ? 0.28 : 0.14;
+    const screenX = this.x - cameraX;
+    const screenY = this.y;
 
     const frames = this.getCurrentFrames();
     const img = frames && frames[this.currentFrameIndex];
 
-    // Offset visual: más hundido en suelo, menos en plataforma
     const visualOffsetY = (!this.onPlatform && this.onGround) ? 15 : 5;
 
-ctx.save();
-ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
-ctx.beginPath();
-ctx.ellipse(
-  shadowX + shadowW / 2,
-  shadowY,
-  shadowW / 2,
-  shadowH / 2,
-  0,
-  0,
-  Math.PI * 2
-);
-ctx.fill();
-ctx.restore();
-    
-    // Fallback sin imagen
+    const shadowCenterX = screenX + this.width / 2;
+    const shadowCenterY = screenY + this.height + visualOffsetY - 2;
+    const shadowRadiusX = this.onGround ? 22 : 16;
+    const shadowRadiusY = this.onGround ? 6 : 4;
+    const shadowAlpha = this.onGround ? 0.22 : 0.12;
+
+    ctx.save();
+    ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+    ctx.beginPath();
+    ctx.ellipse(
+      shadowCenterX,
+      shadowCenterY,
+      shadowRadiusX,
+      shadowRadiusY,
+      0,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+    ctx.restore();
+
     if (!img || !img.complete || img.naturalWidth === 0) {
       ctx.fillStyle = "#ffcc66";
       ctx.fillRect(screenX, screenY + visualOffsetY, this.width, this.height);
@@ -207,7 +193,6 @@ ctx.restore();
       return;
     }
 
-    // Escalado del sprite para encajar con la hitbox
     const scaleX = this.width / img.naturalWidth;
     const scaleY = this.height / img.naturalHeight;
     const drawWidth = img.naturalWidth * scaleX;
@@ -215,7 +200,6 @@ ctx.restore();
 
     ctx.save();
 
-    // Flip horizontal si mira a la izquierda
     if (this.facing === -1) {
       ctx.translate(screenX + drawWidth / 2, 0);
       ctx.scale(-1, 1);
@@ -234,7 +218,6 @@ ctx.restore();
 
     ctx.restore();
 
-    // Objeto encima de la cabeza (en la fase normal)
     if (carriedItem && carriedItem.image && carriedItem.image.complete) {
       this.drawCarriedItem(ctx, screenX, screenY + visualOffsetY, carriedItem);
     }
