@@ -153,7 +153,7 @@ export default class Player {
     }
   }
 
-  draw(ctx, cameraX, carriedItem) {
+  draw(ctx, cameraX, carriedItem, groundY, platforms) {
     const screenX = this.x - cameraX;
     const screenY = this.y;
 
