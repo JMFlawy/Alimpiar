@@ -167,6 +167,14 @@ this.truckLeaving = true;
 this.truckLeaveTime = performance.now();
 });
 
+    this.truckVideo.addEventListener("loadeddata", () => {
+  console.log("Vídeo cargado");
+});
+
+this.truckVideo.addEventListener("error", () => {
+  console.log("Error vídeo", this.truckVideo.error);
+});
+
     this.truckAnimIndex = 0;
     this.truckAnimCounter = 0;
 
