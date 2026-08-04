@@ -508,12 +508,15 @@ this.basuratSound.currentTime = 0;
       this.keys["ArrowRight"] = right;
     }
 
-    if (this.sequenceFinished) {
-      if (this.fadeToBlack && this.fadeAlpha < 1) {
-        this.fadeAlpha = Math.min(1, this.fadeAlpha + 0.01);
-      }
-      return;
-    }
+if (this.sequenceFinished) {
+  if (this.fadeToBlack && this.fadeAlpha < 1) {
+    this.fadeAlpha = Math.min(1, this.fadeAlpha + 0.01);
+  }
+  this.updateParticles();
+  return;
+}
+
+this.updateParticles();
 
     if (
       !this.truckSequenceStarted &&
