@@ -155,7 +155,6 @@ this.truckVideo = document.createElement("video");
 this.truckVideo.src = "assets/contenedores/video.mp4";
 this.truckVideo.preload = "auto";
 this.truckVideo.playsInline = true;
-this.truckVideo.muted = true;
 
 this.truckVideoPlaying = false;
 this.truckVideoFinished = false;
