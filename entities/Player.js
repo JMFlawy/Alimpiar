@@ -162,24 +162,24 @@ export default class Player {
 
     const visualOffsetY = (!this.onPlatform && this.onGround) ? 15 : 5;
 
-    let shadowY = groundY + 8;
-    let shadowAlpha = 0.22;
-    let shadowW = 48;
-    let shadowH = 8;
+    let shadowY = groundY + 12;
+let shadowAlpha = 0.22;
+let shadowW = 48;
+let shadowH = 8;
 
-    if (this.onPlatform) {
-      shadowY = groundY + 4;
-      shadowAlpha = 0.18;
-      shadowW = 40;
-      shadowH = 7;
-    }
+if (this.onPlatform) {
+  shadowY = this.y + this.height + 3;
+  shadowAlpha = 0.18;
+  shadowW = 40;
+  shadowH = 7;
+}
 
-    if (!this.onGround) {
-      shadowY = this.onPlatform ? groundY + 4 : groundY + 6;
-      shadowAlpha = 0.10;
-      shadowW = 34;
-      shadowH = 5;
-    }
+if (!this.onGround) {
+  shadowY = this.onPlatform ? this.y + this.height + 3 : groundY + 10;
+  shadowAlpha = 0.10;
+  shadowW = 34;
+  shadowH = 5;
+}
 
     const shadowX = screenX + this.width / 2;
 
