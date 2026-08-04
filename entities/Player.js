@@ -253,4 +253,18 @@ export default class Player {
     const drawH = 32;
 
     const objX = screenX + this.width / 2 - drawW / 2;
-    const objY = screenYWithOffset - drawH -
+    const objY = screenYWithOffset - drawH - 8;
+
+    ctx.drawImage(
+      img,
+      sx,
+      sy,
+      spriteW,
+      spriteH,
+      objX,
+      objY,
+      drawW,
+      drawH
+    );
+  }
+}
