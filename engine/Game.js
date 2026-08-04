@@ -583,10 +583,11 @@ this.updateParticles();
             (binType === "gris"     && trashType === "resto");
 
           if (correct) {
-            this.playRandomSound(this.successSounds);
+  this.playRandomSound(this.successSounds);
+  this.spawnParticles(container.x + container.width / 2, container.y, "success");
 
-            this.collectedItem = null;
-            this.remainingTrash--;
+  this.collectedItem = null;
+  this.remainingTrash--;
 
             if (this.remainingTrash <= 0) {
               this.gameOver = true;
