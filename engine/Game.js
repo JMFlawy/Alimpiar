@@ -945,15 +945,23 @@ this.basuratSound.currentTime = 0;
     }
 
     for (const container of this.containers) {
-      if (
-        this.truckSequenceStarted &&
-        container.type === "amarillo" &&
-        !this.yellowVisible
-      ) {
-        continue;
-      }
-      container.draw(this.ctx, this.cameraX);
-    }
+  if (
+    this.truckSequenceStarted &&
+    container.type === "amarillo" &&
+    !this.yellowVisible
+  ) {
+    continue;
+  }
+
+  const glow =
+    this.containerGlowColor &&
+    performance.now() - this.containerGlowTime < this.containerGlowDuration &&
+    this.isColliding(this.player, container)
+      ? this.containerGlowColor
+      : null;
+
+  container.draw(this.ctx, this.cameraX, glow);
+}
   }
 
   isColliding(a, b) {
