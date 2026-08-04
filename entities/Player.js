@@ -169,8 +169,11 @@ if (
   }
 
   draw(ctx, cameraX, carriedItem) {
-    const screenX = this.x - cameraX;
-    const screenY = this.y;
+    const shadowX = screenX + this.width / 2 - 24;
+const shadowY = screenY + this.height + 2;
+const shadowW = this.onGround ? 48 : 36;
+const shadowH = this.onGround ? 10 : 7;
+const shadowAlpha = this.onGround ? 0.28 : 0.14;
 
     const frames = this.getCurrentFrames();
     const img = frames && frames[this.currentFrameIndex];
