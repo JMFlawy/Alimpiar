@@ -181,6 +181,21 @@ const shadowAlpha = this.onGround ? 0.28 : 0.14;
     // Offset visual: más hundido en suelo, menos en plataforma
     const visualOffsetY = (!this.onPlatform && this.onGround) ? 15 : 5;
 
+ctx.save();
+ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+ctx.beginPath();
+ctx.ellipse(
+  shadowX + shadowW / 2,
+  shadowY,
+  shadowW / 2,
+  shadowH / 2,
+  0,
+  0,
+  Math.PI * 2
+);
+ctx.fill();
+ctx.restore();
+    
     // Fallback sin imagen
     if (!img || !img.complete || img.naturalWidth === 0) {
       ctx.fillStyle = "#ffcc66";
