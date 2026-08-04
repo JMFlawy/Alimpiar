@@ -188,20 +188,22 @@ if (!this.onGround) {
 
     const shadowX = screenX + this.width / 2;
 
-    ctx.save();
-    ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
-    ctx.beginPath();
-    ctx.ellipse(
-      shadowX,
-      shadowY,
-      shadowW / 2,
-      shadowH / 2,
-      0,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-    ctx.restore();
+    if (drawShadow) {
+  ctx.save();
+  ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+  ctx.beginPath();
+  ctx.ellipse(
+    shadowX,
+    shadowY,
+    shadowW / 2,
+    shadowH / 2,
+    0,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+  ctx.restore();
+}
 
     if (!img || !img.complete || img.naturalWidth === 0) {
       ctx.fillStyle = "#ffcc66";
