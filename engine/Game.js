@@ -435,7 +435,17 @@ this.basuratSound.currentTime = 0;
 
 this.truckVideo.currentTime = 0;
 
-this.truckVideo.play().catch(() => {
+const playPromise = this.truckVideo.play();
+if (playPromise && playPromise.catch) {
+  playPromise.catch((err) => {
+    console.log("Falló play()", err);
+    this.truckVideoPlaying = false;
+    this.truckVideoFinished = true;
+    this.yellowVisible = true;
+    this.truckLeaving = true;
+    this.truckLeaveTime = performance.now();
+  });
+}
 // Si el navegador no deja reproducir el vídeo,
 // el camión continuará su salida igualmente.
 this.truckVideoPlaying = false;
