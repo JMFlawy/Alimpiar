@@ -709,7 +709,8 @@ this.updateParticles();
     }
 
     this.drawBackground();
-    this.drawWorld();
+this.drawWorld();
+this.drawParticles();
 
     if (this.truckSequenceStarted || this.sequenceFinished) {
       if (this.sequenceFinished && this.fadeToBlack && this.fadeAlpha > 0) {
