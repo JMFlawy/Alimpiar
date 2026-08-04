@@ -33,8 +33,18 @@ export default class Container {
         this.type === "marron"   ? "#a0522d" :
                                    "#777777";
 
-      ctx.fillRect(screenX, screenY, this.width, this.height);
-      return;
+      if (glowColor) {
+  ctx.save();
+  ctx.shadowColor = glowColor;
+  ctx.shadowBlur = 14;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+  ctx.fillRect(screenX, screenY, this.width, this.height);
+  ctx.restore();
+} else {
+  ctx.fillRect(screenX, screenY, this.width, this.height);
+}
+return;
     }
 
     const scaleX = this.width / this.image.naturalWidth;
