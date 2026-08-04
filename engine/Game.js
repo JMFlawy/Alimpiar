@@ -582,10 +582,13 @@ this.basuratSound.currentTime = 0;
             (binType === "gris"     && trashType === "resto");
 
           if (correct) {
-            this.playRandomSound(this.successSounds);
+  this.playRandomSound(this.successSounds);
+  this.containerGlowColor = "rgba(120, 255, 140, 0.95)";
+  this.containerGlowTime = performance.now();
+  this.containerGlowDuration = 160;
 
-            this.collectedItem = null;
-            this.remainingTrash--;
+  this.collectedItem = null;
+  this.remainingTrash--;
 
             if (this.remainingTrash <= 0) {
               this.gameOver = true;
