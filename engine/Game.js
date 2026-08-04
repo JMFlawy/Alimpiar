@@ -944,7 +944,7 @@ this.basuratSound.currentTime = 0;
       }
     }
 
-    for (const container of this.containers) {
+        for (const container of this.containers) {
       if (
         this.truckSequenceStarted &&
         container.type === "amarillo" &&
@@ -954,18 +954,20 @@ this.basuratSound.currentTime = 0;
       }
       container.draw(this.ctx, this.cameraX);
     }
+
     if (this.highlightColor) {
-  const elapsed = performance.now() - this.highlightTime;
-  if (elapsed < this.highlightDuration) {
-    this.ctx.save();
-    this.ctx.fillStyle = this.highlightColor;
-    this.ctx.fillRect(0, 0, this.width, this.height);
-    this.ctx.restore();
-  } else {
-    this.highlightColor = null;
+      const elapsed = performance.now() - this.highlightTime;
+      if (elapsed < this.highlightDuration) {
+        this.ctx.save();
+        this.ctx.fillStyle = this.highlightColor;
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.restore();
+      } else {
+        this.highlightColor = null;
+      }
+    }
   }
-}
-  
+
   isColliding(a, b) {
     return (
       a.x < b.x + b.width &&
