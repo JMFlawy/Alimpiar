@@ -186,7 +186,6 @@ this.truckVideo.addEventListener("error", () => {
     this.truckLeaveTime = null;
     this.truckStopTime = null;
     this.yellowVisible = true;
-    this.particles = [];
 
     window.addEventListener("keydown", (e) => {
       if (this.showStartScreen) {
@@ -508,15 +507,12 @@ this.basuratSound.currentTime = 0;
       this.keys["ArrowRight"] = right;
     }
 
-if (this.sequenceFinished) {
-  if (this.fadeToBlack && this.fadeAlpha < 1) {
-    this.fadeAlpha = Math.min(1, this.fadeAlpha + 0.01);
-  }
-  this.updateParticles();
-  return;
-}
-
-this.updateParticles();
+    if (this.sequenceFinished) {
+      if (this.fadeToBlack && this.fadeAlpha < 1) {
+        this.fadeAlpha = Math.min(1, this.fadeAlpha + 0.01);
+      }
+      return;
+    }
 
     if (
       !this.truckSequenceStarted &&
@@ -583,11 +579,10 @@ this.updateParticles();
             (binType === "gris"     && trashType === "resto");
 
           if (correct) {
-  this.playRandomSound(this.successSounds);
-  this.spawnParticles(container.x + container.width / 2, container.y, "success");
+            this.playRandomSound(this.successSounds);
 
-  this.collectedItem = null;
-  this.remainingTrash--;
+            this.collectedItem = null;
+            this.remainingTrash--;
 
             if (this.remainingTrash <= 0) {
               this.gameOver = true;
@@ -599,9 +594,8 @@ this.updateParticles();
               }, 2500); // aquí puedes ajustar el retraso del sonido "terminado"
             }
           } else {
-  this.playRandomSound(this.failSounds);
-  this.spawnParticles(container.x + container.width / 2, container.y, "fail");
-}
+            this.playRandomSound(this.failSounds);
+          }
 
           this.keys["Control"] = false;
           break;
@@ -709,8 +703,7 @@ this.updateParticles();
     }
 
     this.drawBackground();
-this.drawWorld();
-this.drawParticles();
+    this.drawWorld();
 
     if (this.truckSequenceStarted || this.sequenceFinished) {
       if (this.sequenceFinished && this.fadeToBlack && this.fadeAlpha > 0) {
@@ -954,82 +947,6 @@ this.drawParticles();
     }
   }
 
-updateParticles() {
-  this.particles = this.particles.filter(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.08;
-    p.life--;
-    return p.life > 0;
-  });
-}
-
-spawnParticles(x, y, type = "success") {
-  const count = type === "success" ? 10 : 8;
-
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = type === "success" ? 1.5 + Math.random() * 2.5 : 1 + Math.random() * 2;
-
-    this.particles.push({
-      x,
-      y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed - 1,
-      life: 40 + Math.random() * 20,
-      maxLife: 40 + Math.random() * 20,
-      size: type === "success" ? 6 + Math.random() * 4 : 4 + Math.random() * 4,
-      type
-    });
-  }
-}
-
-drawParticles() {
-  for (const p of this.particles) {
-    const alpha = Math.max(0, p.life / p.maxLife);
-    this.ctx.save();
-    this.ctx.globalAlpha = alpha;
-
-    if (p.type === "success") {
-      this.ctx.fillStyle = "#ffd700";
-      this.drawStar(p.x - this.cameraX, p.y, p.size, p.size * 0.5, 5);
-    } else {
-      this.ctx.fillStyle = "#ff4b4b";
-      this.ctx.beginPath();
-      this.ctx.arc(p.x - this.cameraX, p.y, p.size * 0.6, 0, Math.PI * 2);
-      this.ctx.fill();
-    }
-
-    this.ctx.restore();
-  }
-}
-
-drawStar(cx, cy, spikes, innerRadius, outerRadius) {
-  let rot = Math.PI / 2 * 3;
-  let x = cx;
-  let y = cy;
-  const step = Math.PI / spikes;
-
-  this.ctx.beginPath();
-  this.ctx.moveTo(cx, cy - outerRadius);
-
-  for (let i = 0; i < spikes; i++) {
-    x = cx + Math.cos(rot) * outerRadius;
-    y = cy + Math.sin(rot) * outerRadius;
-    this.ctx.lineTo(x, y);
-    rot += step;
-
-    x = cx + Math.cos(rot) * innerRadius;
-    y = cy + Math.sin(rot) * innerRadius;
-    this.ctx.lineTo(x, y);
-    rot += step;
-  }
-
-  this.ctx.lineTo(cx, cy - outerRadius);
-  this.ctx.closePath();
-  this.ctx.fill();
-}
-  
   isColliding(a, b) {
     return (
       a.x < b.x + b.width &&
