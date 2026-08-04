@@ -186,6 +186,7 @@ this.truckVideo.addEventListener("error", () => {
     this.truckLeaveTime = null;
     this.truckStopTime = null;
     this.yellowVisible = true;
+    this.particles = [];
 
     window.addEventListener("keydown", (e) => {
       if (this.showStartScreen) {
