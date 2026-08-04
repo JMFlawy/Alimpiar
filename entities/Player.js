@@ -18,9 +18,6 @@ export default class Player {
     this.onPlatform = false;
     this.facing = 1;
 
-    this.shadowY = y + this.height;
-    this.shadowOnPlatform = false;
-
     this.idleFrames = [];
     this.walkFrames = [];
     this.jumpFrames = [];
@@ -79,9 +76,6 @@ export default class Player {
     this.onGround = false;
     this.onPlatform = false;
 
-    let landedSurfaceY = null;
-    let landedOnPlatform = false;
-
     for (const p of platforms) {
       const pieIzquierdo = this.x + 14;
       const pieDerecho = this.x + this.width - 14;
@@ -97,8 +91,6 @@ export default class Player {
         this.vy = 0;
         this.onGround = true;
         this.onPlatform = true;
-        landedSurfaceY = p.y;
-        landedOnPlatform = true;
       }
     }
 
@@ -106,13 +98,6 @@ export default class Player {
       this.y = groundY - this.height;
       this.vy = 0;
       this.onGround = true;
-      landedSurfaceY = groundY;
-      landedOnPlatform = false;
-    }
-
-    if (landedSurfaceY !== null) {
-      this.shadowY = landedSurfaceY;
-      this.shadowOnPlatform = landedOnPlatform;
     }
 
     if (!this.onGround) {
@@ -177,18 +162,20 @@ export default class Player {
 
     const visualOffsetY = (!this.onPlatform && this.onGround) ? 15 : 5;
 
-    let shadowY = groundY + 4;
+    let shadowY = groundY + 8;
     let shadowAlpha = 0.22;
-    let shadowW = 46;
+    let shadowW = 48;
     let shadowH = 8;
 
     if (this.onPlatform) {
-      shadowY = this.y + this.height + 1;
+      shadowY = groundY + 4;
       shadowAlpha = 0.18;
       shadowW = 40;
       shadowH = 7;
-    } else if (!this.onGround) {
-      shadowY = groundY + 2;
+    }
+
+    if (!this.onGround) {
+      shadowY = this.onPlatform ? groundY + 4 : groundY + 6;
       shadowAlpha = 0.10;
       shadowW = 34;
       shadowH = 5;
