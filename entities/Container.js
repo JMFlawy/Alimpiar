@@ -42,12 +42,30 @@ export default class Container {
     const drawWidth = this.image.naturalWidth * scaleX;
     const drawHeight = this.image.naturalHeight * scaleY;
 
-    ctx.drawImage(
-      this.image,
-      screenX,
-      screenY,
-      drawWidth,
-      drawHeight
-    );
+    if (glowColor) {
+  ctx.save();
+  ctx.shadowColor = glowColor;
+  ctx.shadowBlur = 14;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+
+  ctx.drawImage(
+    this.image,
+    screenX,
+    screenY,
+    drawWidth,
+    drawHeight
+  );
+
+  ctx.restore();
+} else {
+  ctx.drawImage(
+    this.image,
+    screenX,
+    screenY,
+    drawWidth,
+    drawHeight
+  );
+}
   }
 }
