@@ -936,7 +936,7 @@ this.basuratSound.currentTime = 0;
         }
       }
     }
-    this.player.draw(this.ctx, this.cameraX, this.collectedItem);
+    this.player.draw(this.ctx, this.cameraX, this.collectedItem, this.groundY, this.platforms);
 
     for (const trash of this.trashItems) {
       if (!trash.collected) {
