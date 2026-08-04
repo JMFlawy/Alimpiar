@@ -18,6 +18,7 @@ export default class Player {
     this.onPlatform = false;
     this.facing = 1;
     this.wasOnPlatform = false;
+    this.jumpedFromPlatform = false;
 
     this.idleFrames = [];
     this.walkFrames = [];
@@ -61,6 +62,7 @@ export default class Player {
     }
 
     if ((keys["ArrowUp"] || keys[" "]) && this.onGround) {
+      this.jumpedFromPlatform = this.onPlatform;
       this.vy = this.jumpStrength;
       this.onGround = false;
       this.onPlatform = false;
@@ -74,7 +76,7 @@ export default class Player {
     if (this.x < 0) this.x = 0;
     if (this.x + this.width > worldWidth) this.x = worldWidth - this.width;
 
-    this.wasOnPlatform = this.onPlatform;
+    this.wasOnPlatform = this.onPlatform || this.jumpedFromPlatform;
     this.onGround = false;
     this.onPlatform = false;
 
@@ -93,6 +95,7 @@ export default class Player {
         this.vy = 0;
         this.onGround = true;
         this.onPlatform = true;
+        this.jumpedFromPlatform = false;
       }
     }
 
@@ -100,6 +103,7 @@ export default class Player {
       this.y = groundY - this.height;
       this.vy = 0;
       this.onGround = true;
+      this.jumpedFromPlatform = false;
     }
 
     if (!this.onGround) {
@@ -178,7 +182,7 @@ export default class Player {
     }
 
     if (!this.onGround) {
-      if (this.wasOnPlatform) {
+      if (this.jumpedFromPlatform) {
         drawShadow = false;
       } else {
         shadowY = groundY + 10;
