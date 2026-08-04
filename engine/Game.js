@@ -599,8 +599,9 @@ this.updateParticles();
               }, 2500); // aquí puedes ajustar el retraso del sonido "terminado"
             }
           } else {
-            this.playRandomSound(this.failSounds);
-          }
+  this.playRandomSound(this.failSounds);
+  this.spawnParticles(container.x + container.width / 2, container.y, "fail");
+}
 
           this.keys["Control"] = false;
           break;
