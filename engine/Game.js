@@ -600,8 +600,11 @@ this.basuratSound.currentTime = 0;
               }, 2500); // aquí puedes ajustar el retraso del sonido "terminado"
             }
           } else {
-            this.playRandomSound(this.failSounds);
-          }
+  this.playRandomSound(this.failSounds);
+  this.containerGlowColor = "rgba(255, 110, 110, 0.95)";
+  this.containerGlowTime = performance.now();
+  this.containerGlowDuration = 160;
+}
 
           this.keys["Control"] = false;
           break;
