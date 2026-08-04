@@ -21,7 +21,7 @@ export default class Container {
     this.image.src = `assets/contenedores/${filename}`;
   }
 
-  draw(ctx, cameraX) {
+  draw(ctx, cameraX, glowColor = null) {
     const screenX = this.x - cameraX;
     const screenY = this.y;
 
