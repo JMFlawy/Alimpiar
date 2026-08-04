@@ -446,14 +446,6 @@ if (playPromise && playPromise.catch) {
     this.truckLeaveTime = performance.now();
   });
 }
-// Si el navegador no deja reproducir el vídeo,
-// el camión continuará su salida igualmente.
-this.truckVideoPlaying = false;
-this.truckVideoFinished = true;
-this.yellowVisible = true;
-this.truckLeaving = true;
-this.truckLeaveTime = performance.now();
-});
 
 return;
 }
