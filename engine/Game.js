@@ -366,7 +366,7 @@ export default class Game {
 
   updateTruckSequence() {
     const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    const speed = isMobile ? 1.8 : 0.6;
+    const speed = isMobile ? 1.8 : 0.7;
 
     if (!this.truckLeaving && !this.truckVideoPlaying && !this.truckVideoFinished) {
       if (this.truckX > this.truckTargetX) {
