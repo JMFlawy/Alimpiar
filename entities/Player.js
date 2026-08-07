@@ -12,7 +12,7 @@ export default class Player {
     this.vy = 0;
 
     this.gravity = isMobile ? 0.15 : 0.1;
-    this.jumpStrength = isMobile ? -3 : -4;
+    this.jumpStrength = isMobile ? -5 : -4;
 
     this.onGround = false;
     this.wasGrounded = false;
